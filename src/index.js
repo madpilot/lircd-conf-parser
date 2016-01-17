@@ -54,8 +54,6 @@ export default class LircdConf {
     return null;
   }
 
-  
-
   parse() {
     let config = this.convertTabs(this.config);
     config = this.removeComments(config);
