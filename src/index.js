@@ -66,10 +66,8 @@ export default class LircdConf {
 
     let currentRemote = {};
     config.split("\n").forEach((line) => {
-      if(this.isBeginRemote(line)) {
-        let currentRemote = {};
-        this.state = constants.STATE_REMOTE;
-      } else if(this.state == constants.STATE_REMOTE) {
+      switch(this.state) {
+      case constants.STATE_REMOTE:
         if(this.isEndRemote(line)) {
           result.remotes.push(currentRemote);
           this.state = constants.STATE_START;
@@ -82,7 +80,8 @@ export default class LircdConf {
             currentRemote[attribute.key] = attribute.value;
           }
         }
-      } else if(this.state == constants.STATE_CODES) {
+        break;
+      case constants.STATE_CODES:
         if(this.isEndCodes(line)) {
           this.state = constants.STATE_REMOTE;
         } else {
@@ -91,6 +90,13 @@ export default class LircdConf {
             currentRemote.codes[code.key] = code.value;
           }
         }
+        break;
+      default:
+        if(this.isBeginRemote(line)) {
+          let currentRemote = {};
+          this.state = constants.STATE_REMOTE;
+        }
+        break;
       }
     });
 
