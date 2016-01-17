@@ -1,7 +1,7 @@
 const constants = {
-  STATE_START: 0,
-  STATE_REMOTE: 1,
-  STATE_CODES: 2
+  STATE_START: 1,
+  STATE_REMOTE: 2,
+  STATE_CODES: 3
 }
 
 export default class LircdConf {
@@ -29,6 +29,14 @@ export default class LircdConf {
     return line.match(/end \s*remote/i) !== null;
   }
 
+  isBeginCodes(line) {
+    return line.match(/begin \s*codes/i) !== null;
+  }
+
+  isEndCodes(line) {
+    return line.match(/end \s*codes/i) !== null;
+  }
+
   trim(string) {
     return string.replace(/^\s+|\s+$/g, '');
   }
@@ -45,6 +53,8 @@ export default class LircdConf {
     }
     return null;
   }
+
+  
 
   parse() {
     let config = this.convertTabs(this.config);
@@ -63,15 +73,31 @@ export default class LircdConf {
         if(this.isEndRemote(line)) {
           result.remotes.push(currentRemote);
           this.state = constants.STATE_START;
+        } else if(this.isBeginCodes(line)) {
+          currentRemote.codes = {};
+          this.state = constants.STATE_CODES;
         } else {
           let attribute = this.parseAttribute(line);
           if(attribute !== null) {
             currentRemote[attribute.key] = attribute.value;
           }
         }
+      } else if(this.state == constants.STATE_CODES) {
+        if(this.isEndCodes(line)) {
+          this.state = constants.STATE_REMOTE;
+        } else {
+          let code = this.parseAttribute(line);
+          if(code !== null) {
+            currentRemote.codes[code.key] = code.value;
+          }
+        }
       }
     });
 
+    if(this.state === constants.STATE_CODES) {
+      throw(new Error("Missing end codes"));
+    }
+    
     if(this.state !== constants.STATE_START) {
       throw(new Error("Missing end remote"));
     }

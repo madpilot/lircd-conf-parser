@@ -153,6 +153,50 @@ describe('Parser', () => {
     });
   });
 
+  describe("#isBeginCodes", () => {
+    it("should return true if the line is 'begin remote'", () => {
+      let l = new LircdConf('');
+      expect(l.isBeginCodes("begin codes")).to.equal(true);
+    });
+
+    it("should return false if line is not begin codes", () => {
+      let l = new LircdConf('');
+      expect(l.isBeginCodes("begin not codes")).to.equal(false);
+    });
+
+    it("should not care about case", () => {
+      let l = new LircdConf('');
+      expect(l.isBeginCodes("BEGIN cOdeS")).to.equal(true);
+    });
+
+    it('should not care about white space on the line', () => {
+      let l = new LircdConf('');
+      expect(l.isBeginCodes("begin    \tcodes")).to.equal(true);
+    });
+  });
+
+  describe("#isEndCodes", () => {
+    it("should return true if the line is 'end codes'", () => {
+      let l = new LircdConf('');
+      expect(l.isEndCodes("end codes")).to.equal(true);
+    });
+
+    it("should return false if line is not end codes", () => {
+      let l = new LircdConf('');
+      expect(l.isEndCodes("end not codes")).to.equal(false);
+    });
+
+    it("should not care about case", () => {
+      let l = new LircdConf('');
+      expect(l.isEndCodes("END CoDes")).to.equal(true);
+    });
+
+    it('should not care about white space on the line', () => {
+      let l = new LircdConf('');
+      expect(l.isEndCodes("end    \tcodes")).to.equal(true);
+    });
+  });
+
   describe('#parse', () => {
     it('should parse an empty config', () => {
       let config = fs.readFileSync(__dirname + '/fixtures/empty.conf', 'utf8');
@@ -184,6 +228,29 @@ describe('Parser', () => {
       expect(parsed.remotes[0].bits).to.equal('16'); 
       expect(parsed.remotes[0].header).to.equal('9024 4462'); 
       expect(parsed.remotes[0].one).to.equal('585 1662'); 
+    });
+
+    it('should create codes attribute if exists', () => {
+      let config = fs.readFileSync(__dirname + '/fixtures/codes.conf', 'utf8');
+      let l = new LircdConf(config);
+      let parsed = l.parse();
+    });
+
+    it('should raise error if codes block is not ended', () => {
+      let config = fs.readFileSync(__dirname + '/fixtures/incomplete-codes.conf', 'utf8');
+      let l = new LircdConf(config);
+      expect(() => {
+        let parsed = l.parse();
+      }).to.throw(Error);
+    });
+
+    it('should parse codes', () => {
+      let config = fs.readFileSync(__dirname + '/fixtures/codes.conf', 'utf8');
+      let l = new LircdConf(config);
+      let parsed = l.parse();
+
+      expect(parsed.remotes[0].codes['KEY_POWER']).to.equal('0x00FF');
+      expect(parsed.remotes[0].codes['KEY_BACK']).to.equal('0x807F');
     });
   });
 });
