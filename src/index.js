@@ -29,6 +29,22 @@ export default class LircdConf {
     return line.match(/end \s*remote/i) !== null;
   }
 
+  trim(string) {
+    return string.replace(/^\s+|\s+$/g, '');
+  }
+
+  removeExtraWhitespace(string) {
+    return string.replace(/\s+/g, ' ');
+  }
+
+  parseAttribute(line) {
+    let re = line.match(/^\s*(\S+)\s*(.*)$/);
+
+    if(re) {
+      return { key: this.trim(re[1]), value: this.removeExtraWhitespace(this.trim(re[2])) };
+    }
+  }
+
   parse() {
     let config = this.convertTabs(this.config);
     config = this.removeComments(config);
@@ -36,17 +52,19 @@ export default class LircdConf {
     let result = {
       remotes: []
     };
+
     config.split("\n").forEach((line) => {
+      let currentRemote = {};
       if(this.isBeginRemote(line)) {
-        this.state == constants.REMOTE;
-      } else if(this.state == constants.REMOTE && this.isEndRemote(line)) {
-        result.remotes.push({});
-        this.state == constants.START;
+        this.state = constants.STATE_REMOTE;
+      } else if(this.state == constants.STATE_REMOTE && this.isEndRemote(line)) {
+        result.remotes.push(currentRemote);
+        this.state = constants.STATE_START;
       }
     });
 
-    if(this.state !== constants.START) {
-      throw("Error");
+    if(this.state !== constants.STATE_START) {
+      throw(new Error("Missing end remote"));
     }
 
     return result;

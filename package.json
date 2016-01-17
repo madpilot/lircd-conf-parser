@@ -1,7 +1,7 @@
 {
   "name": "lircd-conf-parser",
-  "version": "1.0.0",
-  "description": "Library that prses a LIRCd configuration file",
+  "version": "0.0.1",
+  "description": "Library that parses a LIRCd configuration file",
   "main": "index.js",
   "scripts": {
     "compile": "babel --presets es2015 --source-maps -d lib/ src/",

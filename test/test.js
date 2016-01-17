@@ -84,7 +84,68 @@ describe('Parser', () => {
     });
   });
 
+  describe('#trim', () => {
+    it('should strip leading whitespace', () => {
+      let l = new LircdConf('');
+      expect(l.trim('   a')).to.equal('a');
+    });
 
+    it('should strip trailing whitespace', () => {
+      let l = new LircdConf('');
+      expect(l.trim('a   ')).to.equal('a');
+    });
+  });
+
+  describe('#removeExtraWhiteSpace', () => {
+    it('should convert multiple whitespace to single space', () => {
+      let l = new LircdConf('');
+      expect(l.removeExtraWhitespace('a b   c')).to.equal('a b c');
+    });
+  });
+
+  describe('#parseAttribute', () => {
+    it('should return an attribute object with the key and value set', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("name test");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test');
+    });
+
+    it('should not care about whitespace at the beginning of the line', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("  name test");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test');
+    });
+
+    it('should not care about whitespace at the end of the line', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("name test   ");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test');
+    });
+
+    it('should not care about whitespace between the key and value', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("name    test");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test');
+    });
+
+    it('should not care about multiple values', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("name    test test");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test test');
+    });
+
+    it('should normalize multiple values', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("name    test   test");
+      expect(result.key).to.equal('name');
+      expect(result.value).to.equal('test test');
+    });
+  });
 
   describe('#parse', () => {
     it('should parse an empty config', () => {
