@@ -43,6 +43,7 @@ export default class LircdConf {
     if(re) {
       return { key: this.trim(re[1]), value: this.removeExtraWhitespace(this.trim(re[2])) };
     }
+    return null;
   }
 
   parse() {
@@ -53,13 +54,21 @@ export default class LircdConf {
       remotes: []
     };
 
+    let currentRemote = {};
     config.split("\n").forEach((line) => {
-      let currentRemote = {};
       if(this.isBeginRemote(line)) {
+        let currentRemote = {};
         this.state = constants.STATE_REMOTE;
-      } else if(this.state == constants.STATE_REMOTE && this.isEndRemote(line)) {
-        result.remotes.push(currentRemote);
-        this.state = constants.STATE_START;
+      } else if(this.state == constants.STATE_REMOTE) {
+        if(this.isEndRemote(line)) {
+          result.remotes.push(currentRemote);
+          this.state = constants.STATE_START;
+        } else {
+          let attribute = this.parseAttribute(line);
+          if(attribute !== null) {
+            currentRemote[attribute.key] = attribute.value;
+          }
+        }
       }
     });
 

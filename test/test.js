@@ -145,6 +145,12 @@ describe('Parser', () => {
       expect(result.key).to.equal('name');
       expect(result.value).to.equal('test test');
     });
+
+    it('should return if not an attribute', () => {
+      let l = new LircdConf('');
+      let result = l.parseAttribute("");
+      expect(result).to.equal(null);
+    });
   });
 
   describe('#parse', () => {
@@ -168,6 +174,16 @@ describe('Parser', () => {
       expect(() => {
         let parsed = l.parse();
       }).to.throw(Error);
+    });
+
+    it('should parse remote attributes', () => {
+      let config = fs.readFileSync(__dirname + '/fixtures/attributes.conf', 'utf8');
+      let l = new LircdConf(config);
+      let parsed = l.parse();
+      expect(parsed.remotes[0].name).to.equal('test-remote'); 
+      expect(parsed.remotes[0].bits).to.equal('16'); 
+      expect(parsed.remotes[0].header).to.equal('9024 4462'); 
+      expect(parsed.remotes[0].one).to.equal('585 1662'); 
     });
   });
 });
