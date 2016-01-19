@@ -13,7 +13,13 @@ describe('Parser', () => {
       expect(LircdConf.parse).to.not.equal(undefined);
     });
 
-    it('should create a new instance and invoke #parse');
+    it('should create a new instance and invoke #parse', () => {
+      let config = fs.readFileSync(__dirname + '/fixtures/codes.conf', 'utf8');
+      let parsed = new LircdConf.parse(config);
+
+      expect(parsed.remotes[0].codes['KEY_POWER']).to.equal('0x00FF');
+      expect(parsed.remotes[0].codes['KEY_BACK']).to.equal('0x807F');
+    });
   });
 
   describe('#convertTabs', () => {
