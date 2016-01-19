@@ -4,7 +4,7 @@ import { default as mockery } from 'mockery';
 
 import fs from 'fs';
 
-import { default as LircdConf } from '../lib/index';
+import { default as LircdConf } from '../lib/lircd-conf-parser';
 const expect = chai.expect;
 
 describe('Parser', () => {
