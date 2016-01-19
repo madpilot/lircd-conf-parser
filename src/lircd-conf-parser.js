@@ -10,7 +10,8 @@ export default class LircdConf {
     this.state = constants.STATE_START;
   }
 
-  static parse() {
+  static parse(config) {
+    return new LircdConf(config).parse();
   }
 
   convertTabs(string) {
