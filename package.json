@@ -1,6 +1,6 @@
 {
   "name": "lircd-conf-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library that parses a LIRCd configuration file",
   "main": "index.js",
   "scripts": {

@@ -4,7 +4,7 @@ This library will parse a lircd.conf file for remotes in Javascript. It should r
 
 # Installing
 
-```npm install lircd-conf-parse```
+```npm install lircd-conf-parser```
 
 # API Reference
 
@@ -48,7 +48,7 @@ Code does in /src and is cross compiled when the tests are run. Modifications to
 If you are going to submit patches, please try to make sure the tests pass, and that you have created a test covering the changes you have made
 
 ## Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
