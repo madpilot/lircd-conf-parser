@@ -10,10 +10,11 @@ This library will parse a lircd.conf file for remotes in Javascript. It should r
 
 ```js
   import { default as Parser } from 'lircd-conf-parser';
+  import { readFile } from 'fs';
 
-  fs.readFile('/path/to/lircd.conf', (err, content) => {
+  readFile('/path/to/lircd.conf', (err, content) => {
     try {
-      var parsed = Parser.parse(content);
+      var parsed = Parser.parse(content.toString());
 
       parsed.remotes.forEach((remote) => {
         var name = remote.name;
