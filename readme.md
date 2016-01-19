@@ -43,6 +43,8 @@ The library doesn't validate key names - what ever is stored will be represented
 
 # Contributing
 
+Code does in /src and is cross compiled when the tests are run. Modifications to /lib will be blown away.
+
 If you are going to submit patches, please try to make sure the tests pass, and that you have created a test covering the changes you have made
 
 ## Note on Patches/Pull Requests
