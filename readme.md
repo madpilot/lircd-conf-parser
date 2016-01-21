@@ -1,4 +1,4 @@
-# LIRCD Config Parser [![Build Status](https://travis-ci.org/madpilot/lircd-conf-parser.svg?branch=master)](https://travis-ci.org/madpilot/lircd-conf-parser)
+# LIRCD Config Parser [![Build Status](https://travis-ci.org/madpilot/lircd-conf-parser.svg?branch=master)](https://travis-ci.org/madpilot/lircd-conf-parser) [![Code Climate](https://codeclimate.com/github/madpilot/lircd-conf-parser/badges/gpa.svg)](https://codeclimate.com/github/madpilot/lircd-conf-parser)
 
 This library will parse a lircd.conf file for remotes in Javascript. It should run in both NodeJS and the browser (with browserify).
 
